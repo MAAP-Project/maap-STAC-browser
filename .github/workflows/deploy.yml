@@ -17,7 +17,7 @@ on:
       browser_version_tag:
         description: 'browser version tag'
         required: true
-        default: v3.0.1
+        default: v3.0.2
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
