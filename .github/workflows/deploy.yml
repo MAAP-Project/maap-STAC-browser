@@ -61,8 +61,8 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-region: us-west-2
-        role-to-assume: arn:aws:iam::916098889494:role/GithubOIDCRole-MAAP-Project-maap-STAC-browser
-        role-session-name: MAAPStacBrowserDeployment
+        role-to-assume: ${{ vars.DEPLOY_ROLE }}
+        role-session-name: stac-browser-deployment
 
     - name: Install deployment dependencies
       run: npm install
@@ -72,6 +72,7 @@ jobs:
         STAGE: ${{ github.event.inputs.deployment_environment }}
         BROWSER_CLOUDFRONT_DISTRIBUTION_ARN: ${{ vars.BROWSER_CLOUDFRONT_DISTRIBUTION_ARN }}
         STAC_BROWSER_DIST_PATH: 'stac-browser/dist' 
+        PROJECT: ${{ vars.PROJECT }}
       run: |
         npm install -g aws-cdk
         cdk deploy --all --require-approval never
