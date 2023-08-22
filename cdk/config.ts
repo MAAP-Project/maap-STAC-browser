@@ -1,4 +1,5 @@
 export class Config {
+  readonly project: string | undefined;
   readonly stage: string;
   readonly browserCloudFrontDistrbutionArn: string;
   readonly stacBrowserDistPath: string;
@@ -10,6 +11,9 @@ export class Config {
     this.browserCloudFrontDistrbutionArn = process.env.BROWSER_CLOUDFRONT_DISTRIBUTION_ARN!;
     if (!process.env.STAC_BROWSER_DIST_PATH) throw Error("Must provide STAC_BROWSER_DIST_PATH");
     this.stacBrowserDistPath = process.env.STAC_BROWSER_DIST_PATH!;
+
+    this.project = process.env.PROJECT;
+     
   }
 
   /**
@@ -18,5 +22,5 @@ export class Config {
    * @returns Full id of stack
    */
   buildStackName = (serviceId: string): string =>
-    `MAAP-STAC-${this.stage}-${serviceId}`;
+    `${this.project}-STAC-${this.stage}-${serviceId}`;
 }
