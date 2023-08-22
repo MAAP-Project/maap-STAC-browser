@@ -12,24 +12,20 @@ export class StacBrowser extends Stack {
         const bucket = new s3.Bucket(this, 'Bucket', {
             accessControl: s3.BucketAccessControl.PRIVATE,
             removalPolicy: RemovalPolicy.DESTROY,
-            websiteIndexDocument: props.websiteIndexDocument,
             })
 
-        // If a cloudfront distribution is specified, grant it read access to the bucket
-        if (props.cloudFrontDistributionArn){
-            bucket.addToResourcePolicy(new PolicyStatement({
-                        sid: 'AllowCloudFrontServicePrincipal',
-                        effect: Effect.ALLOW, 
-                        actions: ['s3:GetObject'],
-                        principals: [new ServicePrincipal('cloudfront.amazonaws.com')],
-                        resources: [bucket.arnForObjects('*')],
-                        conditions: {
-                            'StringEquals': {
-                                'aws:SourceArn': props.cloudFrontDistributionArn
-                            }
+        bucket.addToResourcePolicy(new PolicyStatement({
+                    sid: 'AllowCloudFrontServicePrincipal',
+                    effect: Effect.ALLOW, 
+                    actions: ['s3:GetObject'],
+                    principals: [new ServicePrincipal('cloudfront.amazonaws.com')],
+                    resources: [bucket.arnForObjects('*')],
+                    conditions: {
+                        'StringEquals': {
+                            'aws:SourceArn': props.cloudFrontDistributionArn
                         }
-                    }));
-        }
+                    }
+                }));
         
 
         new s3_deployment.BucketDeployment(this, 'BucketDeployment', {
@@ -47,23 +43,11 @@ export class StacBrowser extends Stack {
 
 export interface Props extends StackProps {
 
-    
-    /** ARN of the cloudfront distribution to which we should grant read access to the browser bucket. If undefined,
-     * the policy is not modified.
-     * @default - No cloudfront distribution
-     */
-    cloudFrontDistributionArn?: string;
+    // ARN of the cloudfront distribution to which we should grant read access to the browser bucket. 
+    cloudFrontDistributionArn: string;
 
     // location of the stac-browser dist directory in the local filesystem
     stacBrowserDistPath: string;
-
-    /**
-     * The name of the index document (e.g. "index.html") for the website. Enables static website
-     * hosting for this bucket.
-     *
-     * @default - No index document.
-     */
-    websiteIndexDocument?: string;
 
 
 }
