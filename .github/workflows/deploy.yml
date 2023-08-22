@@ -61,7 +61,7 @@ jobs:
       uses: aws-actions/configure-aws-credentials@v2
       with:
         aws-region: us-west-2
-        role-to-assume: arn:aws:iam::916098889494:role/GithubOIDCRole-MAAP-Project-maap-STAC-browser
+        role-to-assume: ${{ vars.DEPLOY_ROLE }}
         role-session-name: MAAPStacBrowserDeployment
 
     - name: Install deployment dependencies
